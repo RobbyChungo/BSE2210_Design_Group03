@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Cakes - SweetBite Bakery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #fff8f0; color: #5c3d2e; }
+        
+        /* Header Styles */
+        header { background-color: #fff; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 15px 5%; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 3px solid #ff9d76; }
+        .menu-toggle { font-size: 24px; cursor: pointer; width: 33%; }
+        .logo { text-align: center; width: 33%; font-size: 32px; font-weight: bold; color: #e2743f; }
+        .search-container { width: 33%; display: flex; justify-content: flex-end; }
+        .search-box { background: #f7f7f7; border-radius: 20px; padding: 8px 15px; width: 80%; display: flex; align-items: center; }
+        .search-box input { border: none; background: transparent; width: 100%; outline: none; padding: 5px; }
+        
+        .bottom-nav { display: flex; justify-content: space-between; padding-top: 15px; align-items: center; }
+        .nav-links { display: flex; }
+        .nav-item { margin-right: 25px; position: relative; cursor: pointer; font-weight: 600; }
+        .dropdown { position: absolute; top: 100%; left: 0; background: white; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); border-radius: 5px; width: 180px; display: none; z-index: 100; }
+        .dropdown a { display: block; padding: 10px 15px; text-decoration: none; color: #5c3d2e; border-bottom: 1px solid #f1f1f1; }
+        .dropdown a:hover { background: #fff8f0; }
+        .nav-item:hover .dropdown { display: block; }
+        .cart-icon { font-size: 24px; cursor: pointer; color: #5c3d2e; }
+        
+        /* Side Menu Styles */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transition: left 0.4s ease;
+            padding: 25px;
+            overflow-y: auto;
+        }
+        
+        .side-menu.active {
+            left: 0;
+        }
+        
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ff9d76;
+            padding-bottom: 15px;
+        }
+        
+        .menu-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e2743f;
+        }
+        
+        .close-menu {
+            font-size: 24px;
+            cursor: pointer;
+            color: #5c3d2e;
+            transition: transform 0.3s;
+        }
+        
+        .close-menu:hover {
+            transform: rotate(90deg);
+        }
+        
+        .menu-links {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .menu-links a {
+            padding: 16px 12px;
+            text-decoration: none;
+            color: #5c3d2e;
+            border-bottom: 1px solid #f1f1f1;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-links a i {
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .menu-links a:hover {
+            background: #fff8f0;
+            color: #e2743f;
+            padding-left: 20px;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+            transition: opacity 0.3s;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* Page Title */
+        .page-title { text-align: center; margin: 30px 0; font-size: 36px; color: #5c3d2e; position: relative; padding-bottom: 15px; }
+        .page-title:after { content: ""; display: block; width: 80px; height: 4px; background: #e2743f; margin: 15px auto; border-radius: 2px; }
+        
+        /* Cakes Grid */
+        .cakes-container { width: 90%; margin: 20px auto 50px; }
+        .cakes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .cake-item { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); transition: transform 0.3s, box-shadow 0.3s; }
+        .cake-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
+        .cake-img { height: 220px; background-size: cover; background-position: center; }
+        .cake-info { padding: 20px; text-align: center; }
+        .cake-title { font-size: 20px; font-weight: 700; color: #5c3d2e; margin-bottom: 10px; }
+        .cake-caption { color: #7a6154; font-size: 16px; margin-bottom: 15px; }
+        .cake-price { color: #e2743f; font-weight: 700; font-size: 20px; }
+        
+        /* Back Button */
+        .back-button { display: inline-block; margin: 20px 5% 30px; padding: 10px 20px; background: #e2743f; color: white; text-decoration: none; border-radius: 5px; font-weight: 600; transition: background 0.3s; }
+        .back-button:hover { background: #c45b2a; }
+        
+        /* Footer Styles */
+        footer { background: #5c3d2e; color: white; padding: 40px 5%; display: flex; justify-content: space-between; }
+        .footer-logo { font-size: 24px; font-weight: bold; color: #ff9d76; margin-bottom: 15px; }
+        .social-icons { display: flex; gap: 15px; }
+        .social-icons i { font-size: 24px; color: #fff8f0; }
+        .footer-section { flex: 1; }
+        .footer-section.middle { text-align: center; }
+        .footer-section.right { text-align: right; }
+        .footer-section h3 { margin-bottom: 15px; color: #ff9d76; }
+        
+        /* Responsive */
+        @media (max-width: 900px) { .cakes-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { 
+            .cakes-grid { grid-template-columns: 1fr; }
+            footer { flex-direction: column; gap: 30px; }
+            .footer-section.middle, .footer-section.right { text-align: left; }
+            .bottom-nav { flex-direction: column; align-items: flex-start; }
+            .nav-links { margin-bottom: 15px; }
+            .cart-icon { align-self: flex-end; }
+            .side-menu {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <div class="menu-logo">SWEETBITE</div>
+            <div class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="menu-links">
+            <a href="#"><i class="fas fa-user-plus"></i> Sign up</a>
+            <a href="#"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="#"><i class="fas fa-chart-line"></i> Trends</a>
+            <a href="#"><i class="fas fa-headset"></i> Support</a>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="top-nav">
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i> 
+            </div>
+            <div class="logo">SWEETBITE</div>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-nav">
+            <div class="nav-links">
+                <div class="nav-item"><a href="index.html" style="text-decoration: none; color: inherit;">HOME</a></div>
+                <div class="nav-item">
+                    MENU
+                    <div class="dropdown">
+                        <a href="cakes.html">Cakes</a>
+                        <a href="#">Muffins</a>
+                        <a href="#">Scones</a>
+                        <a href="#">Cookies</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                     SENTIMENTAL CARDS
+                    <div class="dropdown">
+                        <a href="love.html">Love</a>
+                        <a href="#">Friends</a>
+                        <a href="#">Best friends</a>
+                        <a href="#">Mother</a>
+                        <a href="#">Father</a>
+                        <a href="#">Crash</a>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        
+        <h1 class="page-title">Our Delicious Cakes</h1>
+        
+        <div class="cakes-container">
+            <div class="cakes-grid">
+                <!-- Replace image URLs with your own images -->
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('chocolate_cake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Chocolate Fudge Cake</div>
+                        <div class="cake-caption">Rich chocolate cake with layers of fudge icing</div>
+                        <div class="cake-price">K349.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('redcake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Red Velvet Cake</div>
+                        <div class="cake-caption">Classic red velvet with cream cheese frosting</div>
+                        <div class="cake-price">K260.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('espresso_cake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Vanilla Bean Cake</div>
+                        <div class="cake-caption">Light vanilla cake with buttercream frosting</div>
+                        <div class="cake-price">K280.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('carrot_CAKE.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Carrot Cake</div>
+                        <div class="cake-caption">Moist carrot cake with cream cheese frosting</div>
+                        <div class="cake-price">K340.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('lemon_cake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Lemon Drizzle Cake</div>
+                        <div class="cake-caption">Zesty lemon cake with tangy lemon glaze</div>
+                        <div class="cake-price">K260.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('strawberry_cake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Strawberry Shortcake</div>
+                        <div class="cake-caption">Layers of sponge cake, fresh strawberries and cream</div>
+                        <div class="cake-price">K380.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('rapsberry_cake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Raspberry Cake</div>
+                        <div class="cake-caption">Layers of sponge cake, fresh Raspberries and cream</div>
+                        <div class="cake-price">K399.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('peachcake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Peach cake</div>
+                        <div class="cake-caption">Layers of sponge cake, fresh peach and cream</div>
+                        <div class="cake-price">K350.99</div>
+                    </div>
+                </div>
+                
+                <div class="cake-item">
+                    <div class="cake-img" style="background-image: url('caramel_cake.jpg')"></div>
+                    <div class="cake-info">
+                        <div class="cake-title">Caramel Cake</div>
+                        <div class="cake-caption">Creamy enough to cover your whole mouth with goodness </div>
+                        <div class="cake-price">K370.99</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-section left">
+            <div class="footer-logo">SWEETBITE</div>
+            <div class="social-icons">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-x-twitter"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-linkedin"></i>
+            </div>
+        </div>
+        
+        <div class="footer-section middle">
+            <h3>Location</h3>
+            <p>123 Bakery Street</p>
+            <p>Sweet City, SC 12345</p>
+        </div>
+        
+        <div class="footer-section right">
+            <h3>About Us</h3>
+            <p>Contact Us</p>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for side menu functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const closeMenu = document.getElementById('closeMenu');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+        
+        menuToggle.addEventListener('click', function() {
+            sideMenu.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMenu.addEventListener('click', function() {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        overlay.addEventListener('click', function() {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // JavaScript for dropdown menus
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('nav-item')) {
+                        const dropdown = this.querySelector('.dropdown');
+                        if (dropdown) {
+                            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                        }
+                    }
+                });
+            });
+            
+            // Close dropdowns when clicking elsewhere
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.nav-item')) {
+                    document.querySelectorAll('.dropdown').forEach(dropdown => {
+                        dropdown.style.display = 'none';
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
