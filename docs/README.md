@@ -5,11 +5,12 @@ Due Date: September 18, 2025
 
   Team Details
 
-| Name             | Student ID | Program  | Year of Study            |            Role                     |
-|                  |            |          |                          |                                     |
-| Robby Chungo     | 2410051    | BSE      | 2nd Year, 2nd Semester   | Member A (Design & Principles Lead) |
-| Chandi Chileshe  | 2410226    | BSE      | 2nd Year, 2nd Semester   | Member B (Business Analyst)         |
-| John Mwando      | 2410053    | BSE      | 2nd Year, 2nd Semester   | Member C (Culture & Ops Lead)       |
+
+Robby Chungo | 2410051 | BSE | 2nd Year, 2nd Semester   | Member A (Design & Principles Lead) 
+
+Chandi Chileshe | 2410226  | BSE      | 2nd Year, 2nd Semester   | Member B (Business Analyst)         
+
+John Mwando | 2410053 | BSE | 2nd Year, 2nd Semester | Member C (Culture & Ops Lead) 
 
  Project Overview
 This repository contains our team's submission for Assignment 1: Foundations of Modern Software Design. The project involves proposing an introductory design vision for a Unified Student Experience Platform (USEP), focusing on processes, artifacts, and cultural/business considerations.
@@ -57,3 +58,4 @@ Critical Analysis and Application: All analysis of how trends apply to the speci
 Creation of Artifacts: The final CI/CD pipeline diagram and its composition were designed by the team based on our understanding of DevOps principles. AI was not used to generate diagrams.
  Synthesis of Ideas: Combining research from various sources, forming coherent arguments, and crafting the final narrative of our report and discussion was entirely human-led.
 The Live Discussion: The recorded conversation was an authentic, unscripted debate among team members. Our questions, challenges, and defenses were spontaneous and reflected our own understanding and viewpoints.
+
